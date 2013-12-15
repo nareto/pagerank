@@ -1,8 +1,10 @@
 #import numpy as np
 import timeit
+import sys
 
-matrix = "wiki-vote.npy"
-n = 1
+#matrix = "wiki-vote.npy"
+matrix = sys.argv[1]
+n = 10
 
 setup_code="""
 from pow import pow

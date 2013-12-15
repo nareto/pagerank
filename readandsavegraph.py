@@ -43,13 +43,12 @@ def read_graph(inpath, outpath, type="float64"):
         else:
             P[:,j] = (1/deg[j])*P[:,j]
     
-    print P.dtype
     np.save(outfile,P)
     outfile.close()
 
 if __name__ == "__main__":
-    try:
-        read_graph(sys.argv[1], sys.argv[2], sys.argv[3])
-        exit
-    except:
+    if len(sys.argv) != 4:
         usage(sys.argv[0])
+        exit        
+    else:
+        read_graph(sys.argv[1], sys.argv[2], sys.argv[3])

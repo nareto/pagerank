@@ -2,8 +2,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 from pow import pow
 from innerouter import innerouter
+import sys
 
-matrix = "harvard500.npy"
+matrix = sys.argv[1]
 a = 0.85
 P=np.load(matrix)
 xpow,respow = pow(P, alpha=a)
