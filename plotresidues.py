@@ -14,8 +14,8 @@ a = 0.85
 #xinout,resinout = innerouter(P,d,alpha = a)
 
 #or better load residue vector from previous computtation
-respow = np.loadtxt(basename+"pow-residues")
-resinout = np.loadtxt(basename+"inout-residues")
+respow = np.loadtxt(basename+"-pow-residues")
+resinout = np.loadtxt(basename+"-inout-residues")
 plt.plot(respow,'.g', resinout, '.r')
 plt.yscale('log')
 plt.legend(('power method','inner-outer'))

@@ -29,6 +29,6 @@ if __name__ == "__main__":
     else:
         P,dvec = load_graph(sys.argv[1])
         x,res = pow(P,dvec)
-        np.savetxt(sys.argv[1]+"pow-residues",res)
-        np.save(sys.argv[1]+"pow-solution",x)
+        np.savetxt(sys.argv[1]+"-pow-residues",res)
+        np.save(sys.argv[1]+"-pow-solution",x)
 
