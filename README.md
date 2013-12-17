@@ -10,7 +10,8 @@ I tested the programs with the  graphs from the "Social network" sections from  
 Example:
 
 	python readandsavegraph.py wiki-Vote.txt wiki float64
-	python comparetimes.py wiki
+	python pow.py wiki
+	python innerouter.py wiki
 	python plotresidues.py wiki
 
 

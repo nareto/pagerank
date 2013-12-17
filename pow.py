@@ -3,8 +3,8 @@ import sys
 from readandsavegraph import load_graph
 
 def usage(name):
-    print "Applies power method to PageRank problem. You have to supply the basename for the matrix files and two outfiles, one for the residue (ASCII) and one for the approximated solution (.npy)"
-    print "USAGE: python {0} basename residue_file x_file.npy".format(name)
+    print "Applies power method to PageRank problem; you have to supply the basename for the matrix files. Two outfiles will be produced, one for the residue (ASCII) and one for the approximated solution (.npy)"
+    print "USAGE: python {0} basename".format(name)
 
 def pow(P,d,alpha=0.85,tol=1.e-7,maxiter=300):
     n = float(P.shape[0])
@@ -23,12 +23,12 @@ def pow(P,d,alpha=0.85,tol=1.e-7,maxiter=300):
     return x,res[1:]
 
 if __name__ == "__main__":
-    if len(sys.argv) != 4:
+    if len(sys.argv) != 2:
         usage(sys.argv[0])
         sys.exit(1)
     else:
         P,dvec = load_graph(sys.argv[1])
         x,res = pow(P,dvec)
-        np.savetxt(sys.argv[2],res)
-        np.save(sys.argv[3],x)
+        np.savetxt(sys.argv[1]+"pow-residues",res)
+        np.save(sys.argv[1]+"pow-solution",x)
 

@@ -7,10 +7,15 @@ import sys
 
 basename = sys.argv[1]
 a = 0.85
-P,d=load_graph(basename)
-xpow,respow = pow(P,d,alpha=a)
-xinout,resinout = innerouter(P,d,alpha = a)
 
+##compute everytime the methods
+#P,d=load_graph(basename)
+#xpow,respow = pow(P,d,alpha=a)
+#xinout,resinout = innerouter(P,d,alpha = a)
+
+#or better load residue vector from previous computtation
+respow = np.loadtxt(basename+"pow-residues")
+resinout = np.loadtxt(basename+"inout-residues")
 plt.plot(respow,'.g', resinout, '.r')
 plt.yscale('log')
 plt.legend(('power method','inner-outer'))
