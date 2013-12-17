@@ -2,21 +2,21 @@
 import timeit
 import sys
 
-#matrix = "wiki-vote.npy"
-matrix = sys.argv[1]
-n = 10
+basename = sys.argv[1]
+n = 1
 
 setup_code="""
 from pow import pow
 from innerouter import innerouter
 import numpy as np
-P = np.load("%s")
-""" % matrix
+from readandsavegraph import load_graph
+P,d = load_graph("%s")
+""" % basename
 
-timepow = timeit.timeit('x,res = pow(P)', setup=setup_code, number=n)
-timeinout = timeit.timeit('x,res = innerouter(P)', setup=setup_code, number=n)
+timepow = timeit.timeit('x,res = pow(P,d)', setup=setup_code, number=n)
+timeinout = timeit.timeit('x,res = innerouter(P,d)', setup=setup_code, number=n)
 
-print "Average time over %d trials, with matrix %s:" % (n,matrix)
+print "Average time over %d trials, with matrix %s:" % (n,basename)
 print "%20s %7f" % ("Power Method", timepow/float(n))
 print "%20s %7f" % ("Inner Outer", timeinout/float(n))
 #print "%10s" % "Power Method"

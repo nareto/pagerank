@@ -2,13 +2,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 from pow import pow
 from innerouter import innerouter
+from readandsavegraph import load_graph
 import sys
 
-matrix = sys.argv[1]
+basename = sys.argv[1]
 a = 0.85
-P=np.load(matrix)
-xpow,respow = pow(P, alpha=a)
-xinout,resinout = innerouter(P, alpha = a)
+P,d=load_graph(basename)
+xpow,respow = pow(P,d,alpha=a)
+xinout,resinout = innerouter(P,d,alpha = a)
 
 plt.plot(respow,'.g', resinout, '.r')
 plt.yscale('log')

@@ -1,31 +1,34 @@
 import numpy as np
 import sys
+from readandsavegraph import load_graph
 
 def usage(name):
-    print "Applies power method to PageRank problem. You have to supply the P matrix as a .npy file and two outfiles, one for the residue (ASCII) and one for the approximated solution (.npy)"
-    print "USAGE: python {0} pmatrix.npy residue_file x_file.npy".format(name)
+    print "Applies power method to PageRank problem. You have to supply the basename for the matrix files and two outfiles, one for the residue (ASCII) and one for the approximated solution (.npy)"
+    print "USAGE: python {0} basename residue_file x_file.npy".format(name)
 
-def pow(P,alpha=0.85,tol=1.e-7,maxiter=300):
+def pow(P,d,alpha=0.85,tol=1.e-7,maxiter=300):
     n = float(P.shape[0])
+    u = np.ones(n,dtype=P.dtype)/n #dangling node vector
     b = (1-alpha)*(1/n)*np.ones(n)
-    x = (np.ones(n)/n)
+    x = np.ones(n)/n
     res = np.array([1.0])
     iter = 0
     while res[-1] > tol and iter < maxiter:
-        y = (alpha*P.dot(x)) + b
-        #y = y/np.linalg.norm(y,1)
+        y = (alpha*(P.dot(x) + (d.dot(x)*u))) + b
         res = np.append(res,np.linalg.norm(x-y))
+        y = y/np.linalg.norm(y,1)
         x = y
         iter += 1
+        
     return x,res[1:]
 
 if __name__ == "__main__":
     if len(sys.argv) != 4:
         usage(sys.argv[0])
-        exit
+        sys.exit(1)
     else:
-        P = np.load(sys.argv[1])
-        x,res = pow(P)
+        P,dvec = load_graph(sys.argv[1])
+        x,res = pow(P,dvec)
         np.savetxt(sys.argv[2],res)
         np.save(sys.argv[3],x)
 
