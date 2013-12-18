@@ -17,7 +17,7 @@ def pow(P,d,alpha=0.85,tol=1.e-3,maxiter=300):
         y = (alpha*(P.dot(x) + (d.dot(x)*u))) + b
         y = y/np.linalg.norm(y,1)
         res = np.append(res,np.linalg.norm(x-y,1))
-        x = y
+        x = np.copy(y)
         iter += 1
         
     return x,res[1:]

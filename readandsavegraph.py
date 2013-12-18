@@ -10,15 +10,12 @@ def usage(name):
     print "USAGE: python {0} graph.txt basename float64".format(name)
 
 def load_graph(basename):
-    keys = np.load(basename+"-keys.npy")
-    values = np.load(basename+"-values.npy")
     dvec = np.load(basename+"-dvector.npy")
+    indices = np.load(basename+"-indices.npy")
+    indptr = np.load(basename+"-indptr.npy")
+    data = np.load(basename+"-data.npy")
     n = len(dvec)
-    P = scipy.sparse.dok_matrix((n,n),dtype=values[0].dtype)
-    i = 0
-    for k in keys:
-        P[k] = values[i]
-        i += 1
+    P = scipy.sparse.csr_matrix((data, indices, indptr),shape = (n,n), dtype=data[0].dtype)
     return (P,dvec)
 
 def save_graph(inpath, out_basename, type="float64"):
@@ -37,36 +34,42 @@ def save_graph(inpath, out_basename, type="float64"):
         line.append(int(str_line[1]))
 	
     n = float(max(line))
+    N = int(len(line)/2)
     deg = np.zeros(n)
-    P = scipy.sparse.dok_matrix((n,n),dtype=type)
-    
-    #find out degree of every node
+    row = np.zeros(N)
+    col = np.zeros(N)
+    data = np.zeros(N)
+    #find out degree of every node and build row and col vector
     infile.seek(0)
     for i in range(comments - 1):
         infile.readline()
+    iter = 0
     for str_line in infile:
         str_line = str_line.split()
         i = int(str_line[1]) - 1
         j = int(str_line[0]) - 1
         deg[j] += 1
-    
+        row[iter] = i
+        col[iter] = j
+        iter += 1
+
     #set matrix's element according to outdegree
     infile.seek(0)
-    for i in range(comments - 1):
-        infile.readline()
-    for str_line in infile:
-        str_line = str_line.split()
-        i = int(str_line[1]) - 1
-        j = int(str_line[0]) - 1
-        P[i, j] = 1/deg[j]
+    for iter in range(N):
+        i = row[iter]
+        j = col[iter]
+        data[iter] = 1/deg[j]
     infile.close()
     
+    P = scipy.sparse.csr_matrix((data,(row,col)),shape=(n,n),dtype=type)
+
     #the d vector has i component 0 if the i node has 0 outdegree, 1 otherwise
     #we will need the d vector to take care of dangling nodes
     d = [x for x in deg == 0]
     np.save(out_basename.rstrip('.npy')+"-dvector",d)
-    np.save(out_basename.rstrip('.npy')+"-keys",P.keys())
-    np.save(out_basename.rstrip('.npy')+"-values",P.values())
+    np.save(out_basename.rstrip('.npy')+"-data",P.data)
+    np.save(out_basename.rstrip('.npy')+"-indices",P.indices)
+    np.save(out_basename.rstrip('.npy')+"-indptr",P.indptr)
     return (P,d)
 
 if __name__ == "__main__":
