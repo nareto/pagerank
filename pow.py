@@ -6,7 +6,7 @@ def usage(name):
     print "Applies power method to PageRank problem; you have to supply the basename for the matrix files. Two outfiles will be produced, one for the residue (ASCII) and one for the approximated solution (.npy)"
     print "USAGE: python {0} basename".format(name)
 
-def pow(P,d,alpha=0.85,tol=1.e-3,maxiter=300):
+def pow(P,d,alpha=0.85,tol=1.e-6,maxiter=50):
     n = float(P.shape[0])
     u = np.ones(n,dtype=P.dtype)/n #dangling node vector
     b = (1-alpha)*(1/n)*np.ones(n)
