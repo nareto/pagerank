@@ -6,7 +6,7 @@ def usage(name):
     print "Applies Gauss-Seidel method to PageRank problem; you have to supply the basename for the matrix files. Two outfiles will be produced, one for the residue (ASCII) and one for the approximated solution (.npy)"
     print "USAGE: python {0} basename".format(name)
 
-def gs(P,d,alpha=0.85,tol=1.e-2,maxiter=10):
+def gs(P,d,alpha=0.85,tol=1.e-6,maxiter=50):
     n = float(P.shape[0])
     u = np.ones(n,dtype=P.dtype)/n #dangling node vector
     b = (1-alpha)*(1/n)*np.ones(n)
@@ -27,6 +27,8 @@ def gs(P,d,alpha=0.85,tol=1.e-2,maxiter=10):
         y = y/np.linalg.norm(y,1)
         x = np.copy(y)
         iter += 1
+        np.savetxt(sys.argv[1]+"-gs-residues",res)
+        np.save(sys.argv[1]+"-gs-solution",x)
     return x,res[1:]
 
 if __name__ == "__main__":
@@ -36,5 +38,5 @@ if __name__ == "__main__":
     else:
         P,dvec = load_graph(sys.argv[1])
         x,res = gs(P,dvec)
-        np.savetxt(sys.argv[1]+"-gs-residues",res)
-        np.save(sys.argv[1]+"-gs-solution",x)
+        #np.savetxt(sys.argv[1]+"-gs-residues",res)
+        #np.save(sys.argv[1]+"-gs-solution",x)

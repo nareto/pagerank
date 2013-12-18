@@ -3,7 +3,7 @@ import timeit
 import sys
 
 basename = sys.argv[1]
-n = 1
+n = 10
 
 setup_code="""
 from pow import pow
